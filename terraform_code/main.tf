@@ -14,7 +14,7 @@ module "ssh"{
   source = "./modules/ssh"
   resource_group_id = module.resource_group.id
   resource_group_location = module.resource_group.location
-  ssh_folder = var.ssh_folder
+  ssh_folder = var.ssh_folder # this variable is taken from the terraform.tfvars file.
 }
 
 module "storage_account" {
@@ -38,7 +38,7 @@ module "linux_vm" {
 
   bash_script_location = "modules/linux_vm/install_tools.sh.tftpl" # location of the bash script which will be executed on the VM.
 
-  azure_pipelines_url = "https://dev.azure.com/mbulka44"
+  azure_pipelines_url = var.azure_pipelines_url # this variable is taken from the terraform.tfvars file.
   azure_pipelines_token = var.azure_pipelines_token # this variable is taken from the terraform.tfvars file.
   azure_pipelines_pool_name = "data_engineering_apps"
   azure_pipelines_agent_name = "myAgent"

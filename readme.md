@@ -6,12 +6,46 @@ This code is using Terraform in order to:
 - Install Azure Pipelines Self Hosted Agent on it
 - Generate SSH private key for connecting to the created VM
 
-## Files and folders functions
+Such a VM can be used for automatic deployment of applications using CI/CD pipelines created in Azure Pipelines.
 
+# Creating and destroying Azure resources using Terraform
+In order to create Azure resources defined in the terraform files in this project we need to use following commands:
+> terraform plan -out main.tfplan
+> terraform apply main.tfplan
 
-# Creating Linux VM instructions
-In the terraform-create-linux-vm folder we need to create the terraform.tfvars file containing the personall access token to the Azure devOps. We need to write in that file:
+In order to destroy created resources we need to use following commands:
+> terraform plan -destroy -out main.destroy.tfplan
+> terraform apply main.destroy.tfplan
 
-  
+# Functions of files and folders from the terraform_code folder
+- terraform.tfvars - Here we need to specify a few parameters needed to run the Terraform code:
+	- azure_pipelines_token - Contains a personal access token to the Azure devOps. It will be used to create a self hosted agent on the created VM.
+	- ssh_folder - Path to the folder where ssh key should be saved. On Windows the default one is C:/Users/\<username>/.ssh/id_rsa. It is the easiest to use.
+	- azure_pipelines_url - URL of the Azure devOps organization which we will be using. It has the following format: https://dev.azure.com/\<organization_name>
 
->azure_pipelines_token = "<your_token>"
+	So the terraform.tfvars file content needs to look like that:
+	azure_pipelines_token  = "your_token"
+	ssh_folder  = "your_folder_path"
+	azure_pipelines_url = "your_url"
+	
+- variables.tf - Here we are providing parameters which are used in the process of creating a VM.
+- outputs.tf - Here we define Terraform outputs. They will be needed to connect to the created VM what is described later in this documentation.
+- 'modules' folder - it contains Terraform modules where each module is creating different Azure resources.
+- modules/linux_vm/install_tools.sh.tftpl - The bash script template which will be used to install Docker and Self Hosted Agent on the created VM.
+- 
+
+# Connecting to the created VM through SSH
+In order to connect we need to use the
+>ssh username@ip_address
+
+command. In order to get the username and ip_address values we need to use the Terraform outputs called 'vm_username' and 'public_ip_address'. 
+
+They will be printed in the terminal at the end of executing the 'terraform apply' command but we can also access them by using the command 'terraform output -raw output_name'.
+
+# Useful links and materials
+In order to learn more about tools used in this project we can use following links:
+- Terraform installation and basic tutorial: [developer.hashicorp.com](https://developer.hashicorp.com/terraform/tutorials/azure-get-started/infrastructure-as-code)
+- Creating an Azure Linux VM using Terraform: [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/virtual-machines/linux/quick-create-terraform?tabs=azure-cli)
+- Creating an Azure Pipelines Self Hosted Agent on Linux VM:
+	- [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/linux-agent?view=azure-devops&tabs=IP-V4)
+	- [youtube.com](https://www.youtube.com/watch?v=Hy6fne9oQJM)
