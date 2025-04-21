@@ -12,8 +12,8 @@ Such a VM can be used for automatic deployment of applications using CI/CD pipel
 Before using this code we need to set up a few parameters:
 - terraform.tfvars - Here we need to specify a few parameters needed to run the Terraform code:
 	- azure_pipelines_token - Contains a personal access token to the Azure devOps. It will be used to create a self hosted agent on the created VM.
-	- ssh_folder - Path to the folder where ssh key should be saved. On Windows the default one is C:/Users/\<username>/.ssh/id_rsa. It is the easiest to use.
-	- azure_pipelines_url - URL of the Azure devOps organization which we will be using. It has the following format: https://dev.azure.com/\<organization_name>
+	- ssh_folder - Path to the folder where ssh key should be saved. On Windows the default one is C:/Users/\<username>/.ssh/id_rsa. It is the easiest one to use.
+	- azure_pipelines_url - URL of the Azure devOps organization which we will be using. It has the following format: https://dev.azure.com/<organization_name>
 
 	So the terraform.tfvars file content needs to look like that:\
 	azure_pipelines_token  = "your_token"\
