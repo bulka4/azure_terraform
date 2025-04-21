@@ -47,7 +47,7 @@ variable "storage_account_uri" {
 
 variable "bash_script_location" {
     type = string
-    description = "location of the bash script template which will be executed on the VM. That needs to be script of a format .sh.tmpl"
+    description = "location of the bash script template which will be executed on the VM. That needs to be script of a format .sh.tftpl"
 }
 
 variable azure_pipelines_url {
