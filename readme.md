@@ -15,9 +15,9 @@ Before using this code we need to set up a few parameters:
 	- ssh_folder - Path to the folder where ssh key should be saved. On Windows the default one is C:/Users/\<username>/.ssh/id_rsa. It is the easiest to use.
 	- azure_pipelines_url - URL of the Azure devOps organization which we will be using. It has the following format: https://dev.azure.com/\<organization_name>
 
-	So the terraform.tfvars file content needs to look like that:
-	azure_pipelines_token  = "your_token"
-	ssh_folder  = "your_folder_path"
+	So the terraform.tfvars file content needs to look like that:\
+	azure_pipelines_token  = "your_token"\
+	ssh_folder  = "your_folder_path"\
 	azure_pipelines_url = "your_url"
 	
 - variables.tf - Here we are providing parameters which are used in the process of creating a VM.
