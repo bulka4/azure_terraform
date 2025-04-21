@@ -10,11 +10,11 @@ Such a VM can be used for automatic deployment of applications using CI/CD pipel
 
 # Creating and destroying Azure resources using Terraform
 In order to create Azure resources defined in the terraform files in this project we need to use following commands:
-> terraform plan -out main.tfplan
+> terraform plan -out main.tfplan\
 > terraform apply main.tfplan
 
 In order to destroy created resources we need to use following commands:
-> terraform plan -destroy -out main.destroy.tfplan
+> terraform plan -destroy -out main.destroy.tfplan\
 > terraform apply main.destroy.tfplan
 
 # Functions of files and folders from the terraform_code folder
