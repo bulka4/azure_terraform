@@ -23,7 +23,7 @@ Before using this code we need to set up a few parameters:
 - variables.tf - Here we are providing parameters which are used in the process of creating a VM.
 
 # Creating and destroying Azure resources using Terraform
-In order to create Azure resources defined in the terraform files in this project we need to use the following commands:
+In order to create Azure resources defined in the terraform files in this project we need to use the following commands (run them in the terraform_code folder):
 > terraform plan -out main.tfplan\
 > terraform apply main.tfplan
 

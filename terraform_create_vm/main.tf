@@ -1,6 +1,6 @@
 module "resource_group" {
   source = "./modules/resource_group"
-  name_prefix = var.resource_group_name_prefix
+  name = var.resource_group_name
   location = var.resource_group_location
 }
 
@@ -43,11 +43,11 @@ module "linux_vm" {
   azure_pipelines_pool_name = "data_engineering_apps"
   azure_pipelines_agent_name = "myAgent"
 }
-
 /*
-module container_registry {
+module "container_registry" {
   source = "./modules/container_registry"
   resource_group_name = module.resource_group.name
   resource_group_location = module.resource_group.location
+  acr_name = "dataEngineeringApps"
 }
 */
