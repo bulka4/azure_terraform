@@ -1,29 +1,45 @@
 # Project overview
+In this repo we have two modules:
+1. **create_acr**\
+This module is creating:
+	- Azure Container Registry (ACR)
+	- Service Principal - with 'acrpush' role and scope for the created ACR which can be used to authorize when pulling and pushing images to the ACR.
+2. **create_linux_vm**\
+This module can be used in order to:
+	- Create a Linux VM on Azure
+	- Install Docker on it
+	- Install Azure Pipelines Self Hosted Agent on it
+	- Generate SSH private key for connecting to the created VM
 
-This code is using Terraform in order to:
-- Create a Linux VM on Azure
-- Install Docker on it
-- Install Azure Pipelines Self Hosted Agent on it
-- Generate SSH private key for connecting to the created VM
+Those resources can be used for automatic deployment of applications using CI/CD pipelines created in Azure Pipelines. Such a pipelines can automatically take code from repository, build a Docker image, push it to the ACR and then pull it and run it on the Linux VM.
 
-Such a VM can be used for automatic deployment of applications using CI/CD pipelines created in Azure Pipelines.
+Self Hosted Agent will be used to perform actions from the CI/CD pipeline and Docker will be used to run containers.
 
-# Code setup
-Before using this code we need to set up a few parameters:
-- terraform.tfvars - Here we need to specify a few parameters needed to run the Terraform code:
-	- azure_pipelines_token - Contains a personal access token to the Azure devOps. It will be used to create a self hosted agent on the created VM.
-	- ssh_folder - Path to the folder where ssh key should be saved. On Windows the default one is C:/Users/<username>/.ssh/id_rsa. It is the easiest one to use.
-	- azure_pipelines_url - URL of the Azure devOps organization which we will be using. It has the following format: https://dev.azure.com/<organization_name>
+# Prerequisites
+## terraform.tfvars setup
+Before using this code we need to create a terraform.tfvars file in the same folder as the main.tf file and assign there values to variables from the variables.tf file in the same folder. In the variables.tf we can find descriptions of those variables.
 
-	So the terraform.tfvars file content needs to look like that:\
-	azure_pipelines_token  = "your_token"\
-	ssh_folder  = "your_folder_path"\
-	azure_pipelines_url = "your_url"
-	
-- variables.tf - Here we are providing parameters which are used in the process of creating a VM.
+## Service Principal preparation
+When Terraform is creating Azure resources it is authenticating using a Service Principal. In order to allow Terraform to create other service principals, we need to create a proper service principal which will be used by Terraform for authentication. 
+
+Creating such a service principal and assigning it to Terraform to use it is described here: [developer.hashicorp.com](https://developer.hashicorp.com/terraform/tutorials/azure-get-started/azure-build) in the ‘Authenticate using the Azure CLI’ section.
+
+But in that section we are creating a service principal with the ‘Contributor’ Azure role and we need to change it into ‘Owner’
+
+Also it is useful to add some name to the created service principal, for example ‘Terraform’. We can do this by using the ‘az ad sp create-for-rbac’ command with the ‘--name’ parameter.
+
+Additionaly we need to assign the ‘Application Administrator’ Entra role to that service principal. It is described here how to do this: [docs.azure.cn](https://docs.azure.cn/en-us/entra/identity/role-based-access-control/manage-roles-portal?tabs=admin-center)
+
+## Agent pool preparation
+Before we use the 'create_linux_vm' module to create a VM we need to create an Agent pool in Azure DevOps first. That's because we will be installing on that VM a Self Hosted Agent which will be added to that pool.
+
+Also we need to make sure that there are no Agents in that pool with the same name as the Agent we will install on that VM. Name of the Agent which we will be creating we are setting up in the terraform.tfvars file.
+
+We can create an Agent pool using the ci_cd_setup > agent_pool_setup > setup.py script from the 'azure_devops_rest_api' repository.
 
 # Creating and destroying Azure resources using Terraform
 In order to create Azure resources defined in the terraform files in this project we need to use the following commands (run them in the terraform_code folder):
+> terraform init
 > terraform plan -out main.tfplan\
 > terraform apply main.tfplan
 
@@ -35,9 +51,12 @@ In order to destroy created resources we need to use the following commands:
 In order to connect we need to use the following command:
 >ssh username@ip_address
 
-In order to get the username and ip_address values we need to use the Terraform outputs called 'vm_username' and 'public_ip_address'. 
+In order to get the ip_address values we need to use the Terraform output called 'public_ip_address'. It will be printed in the terminal at the end of executing the 'terraform apply' command but we can also access it by using the command 'terraform output -raw output_name'.
 
-They will be printed in the terminal at the end of executing the 'terraform apply' command but we can also access them by using the command 'terraform output -raw output_name'.
+The username value is the same as the one defined in the terraform.tfvars file.
+
+# Service Principal app ID and password
+When creating an ACR and Service Principal using the 'create_acr' module, the Service Principal app ID and password are assigned to Terraform outputs sp_id and sp_password respectively. We can access them by using the command 'terraform output -raw output_name'.
 
 # Useful links and materials
 In order to learn more about tools used in this project we can use the following links:
@@ -49,4 +68,4 @@ In order to learn more about tools used in this project we can use the following
 
 # Other notes
 - 'modules' folder - it contains Terraform modules where each module is creating different Azure resources.
-- modules/linux_vm/install_tools.sh.tftpl - The bash script template which will be used to install Docker and Self Hosted Agent on the created VM.
+- modules/linux_vm/install_tools.sh.tftpl - The bash script template which will be executed on the created VM and will install Docker and Self Hosted Agent on it.
