@@ -18,6 +18,6 @@ resource "azuread_service_principal_password" "this" {
 resource "azurerm_role_assignment" "test" {
   scope                = var.scope
   role_definition_name = var.role
-  principal_id         = azuread_application.this.client_id
+  principal_id = azuread_service_principal.this.object_id
   skip_service_principal_aad_check = true # without this running this code is taking a lot of time.
 }
