@@ -16,19 +16,21 @@ Those resources can be used for automatic deployment of applications using CI/CD
 Self Hosted Agent will be used to perform actions from the CI/CD pipeline and Docker will be used to run containers.
 
 # Prerequisites
-## terraform.tfvars setup
-Before using this code we need to create a terraform.tfvars file in the same folder as the main.tf file and assign there values to variables from the variables.tf file in the same folder. In the variables.tf we can find descriptions of those variables.
+## Terraform configuration
+We need to configure properly Terraform so it can create resources in our Azure subscription, it is described here: [developer.hashicorp.com](https://developer.hashicorp.com/terraform/tutorials/azure-get-started/azure-build).
 
-## Service Principal preparation
-When Terraform is creating Azure resources it is authenticating using a Service Principal. In order to allow Terraform to create other service principals, we need to create a proper service principal which will be used by Terraform for authentication. 
+When following this instruction, we need to perform only one step in a different way then it is described in that instruction. And that is caused by the fact that we want to allow Terraform to create Service Principals. 
 
-Creating such a service principal and assigning it to Terraform to use it is described here: [developer.hashicorp.com](https://developer.hashicorp.com/terraform/tutorials/azure-get-started/azure-build) in the ‘Authenticate using the Azure CLI’ section.
+When Terraform is creating Azure resources it is authenticating using a Service Principal. In order to allow Terraform to create other Service Principals, we need to create a Service Principal with proper permissions which will be used by Terraform for authentication. 
 
-But in that section we are creating a service principal with the ‘Contributor’ Azure role and we need to change it into ‘Owner’
+In the ‘Authenticate using the Azure CLI > Create a Service Principal’ section in the instruction on developer.hashicorp.com we are creating a service principal with the ‘Contributor’ Azure role and we need to change it into ‘Owner’.
 
 Also it is useful to add some name to the created service principal, for example ‘Terraform’. We can do this by using the ‘az ad sp create-for-rbac’ command with the ‘--name’ parameter.
 
 Additionaly we need to assign the ‘Application Administrator’ Entra role to that service principal. It is described here how to do this: [docs.azure.cn](https://docs.azure.cn/en-us/entra/identity/role-based-access-control/manage-roles-portal?tabs=admin-center)
+
+## terraform.tfvars setup
+Before using this code we need to create a terraform.tfvars file in the same folder as the main.tf file and assign there values to variables from the variables.tf file in the same folder. In the variables.tf we can find descriptions of those variables.
 
 ## Agent pool preparation
 Before we use the 'create_linux_vm' module to create a VM we need to create an Agent pool in Azure DevOps first. That's because we will be installing on that VM a Self Hosted Agent which will be added to that pool.
