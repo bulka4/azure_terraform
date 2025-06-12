@@ -15,5 +15,5 @@ module "sql_db" {
     sql_server_username = var.sql_server_username
     sql_server_password = var.sql_server_password
 
-    database_name = var.database_name
+    databases_names = var.databases_names
 }

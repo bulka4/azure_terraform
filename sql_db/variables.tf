@@ -15,15 +15,15 @@ variable "sql_server_name" {
 
 variable "sql_server_username" {
   type        = string
-  description = "Name of the sql server which we will create."
+  description = "Username for the admin user we will create."
 }
 
 variable "sql_server_password" {
   type        = string
-  description = "Name of the sql server which we will create."
+  description = "Passowrd for the admin user we will create."
 }
 
-variable "database_name" {
-  type        = string
+variable "databases_names" {
+  type        = list(string)
   description = "Name of the databse which we will create in the sql server."
 }

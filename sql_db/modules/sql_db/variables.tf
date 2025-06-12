@@ -23,7 +23,7 @@ variable "sql_server_password" {
   description = "Name of the sql server which we will create."
 }
 
-variable "database_name" {
-  type        = string
-  description = "Name of the databse which we will create in the sql server."
+variable "databases_names" {
+  type        = list(string)
+  description = "Names of the databses which we will create in the sql server."
 }

@@ -1,10 +1,10 @@
 # Project overview
 In this repo we have two modules:
-1. **create_acr**\
+1. **acr**\
 This module is creating:
 	- Azure Container Registry (ACR)
 	- Service Principal - with 'acrpush' role and scope for the created ACR which can be used to authorize when pulling and pushing images to the ACR.
-2. **create_linux_vm**\
+2. **linux_vm**\
 This module can be used in order to:
 	- Create a Linux VM on Azure
 	- Install Docker on it
@@ -14,6 +14,8 @@ This module can be used in order to:
 Those resources can be used for automatic deployment of applications using CI/CD pipelines created in Azure Pipelines. Such a pipelines can automatically take code from repository, build a Docker image, push it to the ACR and then pull it and run it on the Linux VM.
 
 Self Hosted Agent will be used to perform actions from the CI/CD pipeline and Docker will be used to run containers.
+
+More information about how those modules work can be found in the readme.md files in those modules.
 
 # Prerequisites
 ## Terraform configuration
@@ -30,7 +32,7 @@ Also it is useful to add some name to the created service principal, for example
 Additionaly we need to assign the ‘Application Administrator’ Entra role to that service principal. It is described here how to do this: [docs.azure.cn](https://docs.azure.cn/en-us/entra/identity/role-based-access-control/manage-roles-portal?tabs=admin-center)
 
 ## terraform.tfvars setup
-Before using this code we need to create a terraform.tfvars file in the same folder as the main.tf file and assign there values to variables from the variables.tf file in the same folder. In the variables.tf we can find descriptions of those variables.
+Before using this code we need to create a terraform.tfvars file in the same folder as the main.tf file and assign there values to variables from the variables.tf file in the same folder. In the variables.tf we can find descriptions of those variables. We need to assign values only for those variables which doesn't have assigned the default value.
 
 ## Agent pool preparation
 Before we use the 'create_linux_vm' module to create a VM we need to create an Agent pool in Azure DevOps first. That's because we will be installing on that VM a Self Hosted Agent which will be added to that pool.

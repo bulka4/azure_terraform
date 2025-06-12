@@ -8,7 +8,9 @@ resource "azurerm_mssql_server" "sqlserver" {
 }
 
 resource "azurerm_sql_database" "sqldb" {
-  name                = var.database_name
+  for_each = toset(var.databases_names)
+  
+  name                = each.value
   resource_group_name = var.resource_group_name
   location            = var.resource_group_location
   server_name         = azurerm_mssql_server.sqlserver.name
