@@ -1,7 +1,2 @@
 # Preparing Terraform variables
-We need to create the terraform.tfvars file in the same folder as this readme file and specify there values for the following variables:
-- resource_group_location - Location of the created resource group, for example "westeurope"
-- resource_group_name - name of the created resource group.
-- acr_name - name of the created ACR (without special characters. Uppercase letters allowed.)
-- service_principal_display_name - name of the created service principal which will be used for authentication when pushing and pulling images from ACR (underscores allowed)
-- service_principal_role - role which we want to assign to the created service principal ("acrpush" will allow for both pushing and pulling images to the ACR)
+Before using this code we need to create terraform.tfvars file which look like terraform-draft.tfvars file in the same location. It is described there what values to provide. We are assigning there values to variables from the variables.tf file located in the same folder. In the variables.tf we can also find descriptions of those variables. We need to assign values only for those variables which doesn't have assigned the default value.

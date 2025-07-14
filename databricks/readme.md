@@ -40,7 +40,4 @@ In the setup_unity_catalog module we are creating an external location. We can u
 Data for that table will be saved in the storage account at the path mapped to that external location.
 
 ## terraform variables
-We need to create the terraform.tfvars file in the setup_unity_catalog module and provide there value for the following variables:
-- databricks_account_id - We need to go to the Databricks account console and get account id from the url: https://accounts.azuredatabricks.net/?account_id=<account_id>
-- workspace_id - a databricks workspace ID. It can be obtained from Terraform outputs from the create_workspace module.
-- group_members_emails - emails of users who should belong to the created user group for which we are granting permissions. Those are user principal names from Entra ID.
+Before using this code we need to create terraform.tfvars file which look like terraform-draft.tfvars file in the same location. It is described there what values to provide. We are assigning there values to variables from the variables.tf file located in the same folder. In the variables.tf we can also find descriptions of those variables. We need to assign values only for those variables which doesn't have assigned the default value.
