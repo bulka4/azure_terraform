@@ -6,6 +6,8 @@ The databricks module is for creating a Databricks workspace with a Unity Catalo
 
 Each of those steps is described in more details in below sections: 'Creating a workspace', 'Creating a Databricks account admin' and 'Configuring a Unity Catalog'.
 
+This code is not finished yet. More information about issues which still would need to be resolved can be found in the 'Code issues' section of this document.
+
 # Creating a workspace
 For that purpose we are using the create_workspace module. It creates a Databricks workspace and also a Unity Catalog metastore linked to that workspace. I am not sure but it looks like this metastore is not linked to any storage account yet.
 
@@ -20,7 +22,19 @@ In that case we need to create a new user in Entra ID and assign to it a Global 
 
 In the account console we can verify if our workspace is enabled for Unity Catalog (in the 'workspaces' tab we should see our workspace and metastore assign to it). Also from that console we can take the Databricks account ID needed for the next step, that is to configure a Unity Catalog using Terraform. We can get that account ID from the url: https://accounts.azuredatabricks.net/?account_id=<account_id>.
 
-# Configuring a Unity Catalog
+## External location
+In the setup_unity_catalog module we are creating an external location. We can use it in a Databricks notebook in the following way in order to save data as an external table:
+>df.write.mode("overwrite").format("delta").save(f"{external_location_name}/people") # where df is a DataFrame \
+Data for that table will be saved in the storage account at the path mapped to that external location.
+
+## terraform variables
+Before using this code we need to create terraform.tfvars file which look like terraform-draft.tfvars file in the same location. It is described there what values to provide. We are assigning there values to variables from the variables.tf file located in the same folder. In the variables.tf we can also find descriptions of those variables. We need to assign values only for those variables which doesn't have assigned the default value.
+
+
+
+
+# Code issues
+## Configuring a Unity Catalog
 Once we have a Databricks account ID we can use the setup_unity_catalog module in order to configure the Unity Catalog. This code is not finished as right now it is creating a new metastore and linking it to the Databricks workspace, while it turns out that when we are creating a workspace using the create_workspace module, we are also creating a Unity Catalog metastore and linking it to that workspace. Code from the setup_unity_catalog module will need to be modified such that it uses the metastore created by the create_workspace module.
 
 Steps which right now this module is doing are:
@@ -33,11 +47,3 @@ Steps which right now this module is doing are:
 - create a cluster - a compute cluster for executing code.
 
 Here is a documentation about the code which we are using for performing those steps:  [registry.terraform.io](https://registry.terraform.io/providers/databricks/databricks/latest/docs/guides/unity-catalog-azure)
-
-## External location
-In the setup_unity_catalog module we are creating an external location. We can use it in a Databricks notebook in the following way in order to save data as an external table:
->df.write.mode("overwrite").format("delta").save(f"{external_location_name}/people") # where df is a DataFrame \
-Data for that table will be saved in the storage account at the path mapped to that external location.
-
-## terraform variables
-Before using this code we need to create terraform.tfvars file which look like terraform-draft.tfvars file in the same location. It is described there what values to provide. We are assigning there values to variables from the variables.tf file located in the same folder. In the variables.tf we can also find descriptions of those variables. We need to assign values only for those variables which doesn't have assigned the default value.
